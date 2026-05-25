@@ -2,7 +2,7 @@
   'use strict';
 
   var SCRAMBLE_STEP = 55;     // ms between scramble frames
-  var SCRAMBLE_DURATION = 4000;
+  var SCRAMBLE_DURATION = 8000;
 
   var scouter, powerEl, labelEl, hintEl, audioEl;
   var scanning = false;
