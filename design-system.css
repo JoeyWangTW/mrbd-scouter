@@ -1,0 +1,210 @@
+/* ============================================================
+   MRBD Design System  ·  v1
+   Shared foundation for Meta Ray-Ban Display web apps.
+   Target: 600x600 additive waveguide display, D-pad navigation.
+
+   This file is the canonical source. Each app under apps/ keeps
+   an identical copy named design-system.css so it stays
+   self-contained and Vercel-deployable on its own.
+   ============================================================ */
+
+:root {
+  /* --- Surfaces (#000 renders transparent on the waveguide) --- */
+  --bg-primary:   #000000;
+  --bg-secondary: #0c0c14;
+  --bg-tertiary:  #16161f;
+  --bg-card:      #1c1c2b;
+
+  /* --- Text (size + weight carry hierarchy, not low-contrast grays) --- */
+  --text-primary:   #ffffff;
+  --text-secondary: #b6b6c6;
+  --text-muted:     #80808f;
+
+  /* --- Accent + status --- */
+  --accent:     #00d4ff;
+  --accent-ink: #04141a;
+  --success:    #2fe39a;
+  --warning:    #ffcc45;
+  --danger:     #ff4d6a;
+
+  /* --- Focus ring (must read against a bright real-world background) --- */
+  --focus-ring: #00d4ff;
+  --focus-glow: rgba(0, 212, 255, 0.5);
+
+  /* --- Radius --- */
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-pill: 999px;
+
+  /* --- Layout --- */
+  --safe: 40px;   /* keep content off the frame edge; optics dim there */
+  --gap:  16px;
+
+  /* --- Type scale (large on purpose: the display sits small in the FOV) --- */
+  --fs-display: 96px;   /* hero readouts */
+  --fs-hero:    64px;
+  --fs-h1:      34px;
+  --fs-h2:      26px;
+  --fs-body:    22px;
+  --fs-label:   18px;   /* smallest readable size */
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { width: 600px; height: 600px; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app { position: relative; width: 100%; height: 100%; }
+
+.hidden { display: none !important; }
+
+/* --- Screen: a full-viewport view --- */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+.ds-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  padding: 28px var(--safe) 12px;
+}
+.ds-header h1 {
+  flex: 1;
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.ds-header .ds-meta {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* --- Content area --- */
+.ds-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  padding: 8px var(--safe);
+  overflow-y: auto;
+}
+
+/* --- Focusable + focus ring (D-pad navigation target) --- */
+.focusable {
+  border: 3px solid transparent;
+  border-radius: var(--radius-md);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.12s var(--ease),
+              box-shadow 0.12s var(--ease),
+              transform 0.12s var(--ease),
+              background-color 0.12s var(--ease);
+}
+.focusable:focus {
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 24px var(--focus-glow);
+  transform: scale(1.03);
+}
+
+/* --- Button --- */
+.ds-btn {
+  min-height: 64px;
+  padding: 18px 22px;
+  font-family: inherit;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  text-align: center;
+}
+.ds-btn.primary { background: var(--accent); color: var(--accent-ink); }
+.ds-btn.danger  { background: var(--danger);  color: #1a0007; }
+
+/* --- Nav bar: a row of actions pinned to the bottom --- */
+.ds-nav {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 12px var(--safe) 28px;
+}
+.ds-nav .ds-btn { flex: 1; }
+
+/* --- Card: a labelled value block --- */
+.ds-card {
+  padding: 28px 36px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.ds-card-label {
+  margin-bottom: 8px;
+  font-size: var(--fs-label);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.ds-card-value {
+  font-size: var(--fs-hero);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+}
+
+/* --- Tile: a launcher entry (reserved for the upcoming gallery grid) --- */
+.ds-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+}
+.ds-tile-icon { font-size: 44px; line-height: 1; }
+.ds-tile-name {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* --- Hint text --- */
+.ds-hint {
+  font-size: var(--fs-label);
+  line-height: 1.45;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* --- Utilities --- */
+.ds-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap);
+}
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger  { color: var(--danger); }

@@ -1,0 +1,259 @@
+/* Scouter — app-specific styles, built on design-system.css.
+   A themed app: it overrides the dark tokens for a green/yellow HUD. */
+
+@font-face {
+  font-family: 'Scouter';
+  src: url('assets/scouter.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* The DBZ Scouter font has no digits, so the power-level readout falls back
+   to a digital monospace. To use a dedicated number font instead, drop the
+   .ttf into assets/, uncomment the block below, and it is picked up
+   automatically through the --num-font stack — no other change needed.
+
+@font-face {
+  font-family: 'ScouterNum';
+  src: url('assets/number-font.ttf') format('truetype');
+  font-display: swap;
+}
+*/
+
+:root {
+  --sct-green:      #1f9d4d;
+  --sct-green-lit:  #2bb95e;
+  --sct-green-deep: #0e6531;
+  --sct-yellow:     #ffd21e;
+  --sct-yellow-dim: rgba(255, 210, 30, 0.55);
+  --sct-glow:       rgba(255, 210, 30, 0.7);
+  --num-font: 'ScouterNum', 'Courier New', 'SFMono-Regular', Menlo, monospace;
+}
+
+body { background: #000000; }
+
+/* A green orb sits behind the centre reticle and feathers out to black;
+   the rest of the screen stays black (transparent on the waveguide). */
+#scouter {
+  background: radial-gradient(circle 300px at 50% 50%,
+    var(--sct-green-lit) 0%,
+    var(--sct-green) 40%,
+    var(--sct-green-deep) 62%,
+    #052a14 80%,
+    #000000 100%);
+  color: var(--sct-yellow);
+  overflow: hidden;
+}
+
+/* --- CRT overlays --- */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 4px);
+}
+/* --- corner glyphs (DBZ Scouter font) --- */
+.glyph {
+  position: absolute;
+  font-family: 'Scouter', sans-serif;
+  font-size: 38px;
+  letter-spacing: 5px;
+  color: var(--sct-yellow);
+  text-shadow: 0 0 12px var(--sct-glow);
+}
+.glyph-tl { top: 34px; left: 40px; }
+.glyph-tr { top: 34px; right: 40px; }
+.glyph-bl { bottom: 36px; left: 40px; }
+
+.corner-dots {
+  position: absolute;
+  bottom: 42px;
+  right: 40px;
+  display: flex;
+  gap: 12px;
+}
+.corner-dots span {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--sct-yellow);
+  box-shadow: 0 0 10px var(--sct-glow);
+}
+
+/* --- side targeting triangles --- */
+.tri {
+  position: absolute;
+  top: 300px;
+  width: 0;
+  height: 0;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 0 8px var(--sct-glow));
+}
+.tri-left {
+  left: 52px;
+  border-top: 44px solid transparent;
+  border-bottom: 44px solid transparent;
+  border-left: 60px solid var(--sct-yellow);
+}
+.tri-right {
+  right: 52px;
+  border-top: 44px solid transparent;
+  border-bottom: 44px solid transparent;
+  border-right: 60px solid var(--sct-yellow);
+}
+
+/* --- floating target marks --- */
+.mark {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--sct-yellow-dim);
+}
+.mark-1 { top: 140px; right: 128px; }
+.mark-2 { bottom: 182px; left: 120px; }
+.mark-3 { top: 432px; left: 152px; }
+
+/* --- power-level readout --- */
+.power-readout {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.power {
+  font-family: var(--num-font);
+  font-size: 92px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--sct-yellow);
+  text-shadow: 0 0 18px var(--sct-glow), 0 0 5px #fff6c0;
+}
+.power-label {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: var(--sct-yellow-dim);
+}
+
+/* --- center reticle (scan trigger) --- */
+.reticle {
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  width: 224px;
+  height: 224px;
+  margin: -112px 0 0 -112px;
+  border-radius: 50%;
+  background: transparent;
+  border: 6px solid var(--sct-yellow);
+  box-shadow: 0 0 28px var(--sct-glow), inset 0 0 26px rgba(255, 210, 30, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reticle:focus {
+  border-color: var(--sct-yellow);
+  box-shadow: 0 0 48px #fff6c0, 0 0 30px var(--sct-glow),
+              inset 0 0 26px rgba(255, 210, 30, 0.3);
+  transform: scale(1.04);
+}
+.reticle::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  border: 5px dashed rgba(255, 210, 30, 0.72);
+  animation: spin 14s linear infinite;
+}
+.reticle::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid var(--sct-yellow);
+  animation: reticlePulse 2.4s ease-in-out infinite;
+}
+
+.reticle-core {
+  position: relative;
+  width: 26px;
+  height: 26px;
+}
+.reticle-core::before,
+.reticle-core::after {
+  content: '';
+  position: absolute;
+  background: var(--sct-yellow);
+  box-shadow: 0 0 8px var(--sct-glow);
+}
+.reticle-core::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  margin-left: -1.5px;
+}
+.reticle-core::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  margin-top: -1.5px;
+}
+
+/* --- scan hint --- */
+.scan-hint {
+  position: absolute;
+  bottom: 96px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--sct-yellow-dim);
+}
+
+/* --- scanning state --- */
+#scouter.is-scanning .reticle::before { animation-duration: 1s; }
+#scouter.is-scanning .reticle::after  { animation-duration: 0.5s; }
+#scouter.is-scanning .power { animation: flicker 0.13s steps(2) infinite; }
+
+/* --- "over 9000" state --- */
+#scouter.is-over .power {
+  color: #ffffff;
+  text-shadow: 0 0 28px #ff5252, 0 0 10px #ffffff;
+  animation: overShake 0.42s ease 1;
+}
+#scouter.is-over .power-label {
+  color: #ffffff;
+  text-shadow: 0 0 14px #ff5252;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes reticlePulse {
+  0%, 100% { transform: scale(1);   opacity: 0.45; }
+  50%      { transform: scale(1.1); opacity: 0; }
+}
+@keyframes flicker {
+  0%   { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+@keyframes overShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}

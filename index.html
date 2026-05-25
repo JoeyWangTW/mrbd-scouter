@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
+  <title>Scouter</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div id="scouter" class="screen">
+
+      <!-- decorative glyphs in the DBZ Scouter font (uppercase A-Z only) -->
+      <div class="glyph glyph-tl">SCAN</div>
+      <div class="glyph glyph-tr">LOCK</div>
+      <div class="glyph glyph-bl">PWR</div>
+      <div class="corner-dots glyph-br" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+
+      <!-- side targeting triangles -->
+      <div class="tri tri-left" aria-hidden="true"></div>
+      <div class="tri tri-right" aria-hidden="true"></div>
+
+      <!-- floating target marks -->
+      <div class="mark mark-1" aria-hidden="true"></div>
+      <div class="mark mark-2" aria-hidden="true"></div>
+      <div class="mark mark-3" aria-hidden="true"></div>
+
+      <!-- power-level readout, sitting on top of the reticle -->
+      <div class="power-readout">
+        <div class="power" id="power">000</div>
+        <div class="power-label" id="power-label">POWER LEVEL</div>
+      </div>
+
+      <!-- center reticle: the scan trigger -->
+      <button class="reticle focusable" id="reticle" data-action="scan" aria-label="Scan power level">
+        <span class="reticle-core" aria-hidden="true"></span>
+      </button>
+
+      <div class="scan-hint" id="scan-hint">PRESS TO SCAN</div>
+
+      <!-- CRT scanline overlay, painted on top; never intercepts input -->
+      <div class="scanlines" aria-hidden="true"></div>
+
+    </div>
+  </div>
+
+  <audio id="scan-audio" src="assets/scan.mp3" preload="auto"></audio>
+  <script src="app.js"></script>
+</body>
+</html>
